@@ -9,6 +9,7 @@ import threading
 import time
 import subprocess
 import re
+import requests
 
 sending=False
 
@@ -56,6 +57,12 @@ def stop_sending():
 def thread_function(name):
     while (sending):
         print("Thread %s: starting", name)
+        data = bme280.sample(bus, address, calibration_params)
+        print(data)
+        w = {'temperature': data.temperature,'humidity': data.humidity, 'pressure': data.pressure, 'raspberryRoute': name}
+        headers = {'Content-Type': 'application/json'}
+        r = requests.post('http://192.168.1.6:8080/measurement',json=w, headers=headers) # add authentication
+        print(r.text)
         time.sleep(2)
         print("Thread %s: finishing", name)
 
