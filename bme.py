@@ -61,9 +61,9 @@ def thread_function(name):
         print(data)
         w = {'temperature': data.temperature,'humidity': data.humidity, 'pressure': data.pressure, 'raspberryRoute': name}
         headers = {'Content-Type': 'application/json'}
-        r = requests.post('http://192.168.1.6:8080/measurement',json=w, headers=headers) # add authentication
+        r = requests.post('http://192.168.1.5:8080/measurement',json=w, headers=headers) # add authentication
         print(r.text)
-        time.sleep(2)
+        time.sleep(4)
         print("Thread %s: finishing", name)
 
 app.run(host="0.0.0.0", port=8080)
