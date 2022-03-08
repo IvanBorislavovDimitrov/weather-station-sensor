@@ -56,14 +56,17 @@ def stop_sending():
 
 def thread_function(name):
     while (sending):
-        print("Thread %s: starting", name)
+        print("Thread starting")
         data = bme280.sample(bus, address, calibration_params)
-        print(data)
+        #print(data)
         w = {'temperature': data.temperature,'humidity': data.humidity, 'pressure': data.pressure, 'raspberryRoute': name}
         headers = {'Content-Type': 'application/json'}
-        r = requests.post('http://192.168.1.5:8080/measurement',json=w, headers=headers) # add authentication
-        print(r.text)
+        try:
+            r = requests.post('http://192.168.1.3:8080/measurement',json=w, headers=headers, timeout=10) # add authentication
+            print(r.text)
+        except:
+            print("Error occurred while communicating with server")
         time.sleep(4)
-        print("Thread %s: finishing", name)
+        print("Thread finishing")
 
 app.run(host="0.0.0.0", port=8080)
