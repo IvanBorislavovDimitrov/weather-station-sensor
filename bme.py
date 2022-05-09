@@ -21,10 +21,10 @@ port = 1
 address = 0x77
 bus = smbus2.SMBus(port)
 
-calibration_params = bme280.load_calibration_params(bus, address)
 
 @app.route('/weather', methods=['GET'])
 def get_weather():
+    calibration_params = bme280.load_calibration_params(bus, address)
     data = bme280.sample(bus, address, calibration_params)
     print(data)
     class Weather:
@@ -59,6 +59,7 @@ def stop_sending():
 def thread_function(local_hostname, server_hostname):
     while (sending):
         print("Thread starting! Localhost: " + local_hostname + ". Server host: " + server_hostname)
+        calibration_params = bme280.load_calibration_params(bus, address)
         data = bme280.sample(bus, address, calibration_params)
         #print(data)
         w = {'temperature': data.temperature,'humidity': data.humidity, 'pressure': data.pressure, 'raspberryRoute': local_hostname}
